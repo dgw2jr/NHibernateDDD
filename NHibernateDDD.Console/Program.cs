@@ -36,7 +36,7 @@ namespace NHibernateDDD.Console
             {
                 var cfg = Fluently.Configure()
                     .Database(MsSqlConfiguration.MsSql2008.ConnectionString(
-                        @"Data Source=np:\\.\pipe\LOCALDB#3B04602A\tsql\query;Initial Catalog=Employees;Integrated Security=true;"))
+                        @"Data Source=np:\\.\pipe\LOCALDB#85778BB9\tsql\query;Initial Catalog=Employees;Integrated Security=true;"))
                     .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
                     .BuildConfiguration();
 
