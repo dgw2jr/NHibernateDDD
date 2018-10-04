@@ -6,25 +6,38 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Event;
-using System;
 
 namespace NHibernateDDD.Console
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var cfg = Fluently.Configure()
-                .Database(MsSqlConfiguration.MsSql2008.ConnectionString(
-                    @"Data Source=np:\\.\pipe\LOCALDB#B4222CC7\tsql\query;Initial Catalog=Employees;Integrated Security=true;"))
-                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
-                .BuildConfiguration();
+            var container = BuildContainer();
 
+            using (var scope = container.BeginLifetimeScope())
+            {
+                scope.Resolve<Controller>().Execute();
+            }
+
+            System.Console.ReadKey(true);
+        }
+
+        private static IContainer BuildContainer()
+        {
             var builder = new ContainerBuilder();
+
             builder.RegisterType<TextWriter>().AsSelf();
             builder.RegisterType<TestListener>().AsSelf().AsImplementedInterfaces();
+
             builder.Register(c =>
             {
+                var cfg = Fluently.Configure()
+                    .Database(MsSqlConfiguration.MsSql2008.ConnectionString(
+                        @"Data Source=np:\\.\pipe\LOCALDB#3B04602A\tsql\query;Initial Catalog=Employees;Integrated Security=true;"))
+                    .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
+                    .BuildConfiguration();
+
                 var postLoadListeners = cfg.EventListeners.PostLoadEventListeners.ToList();
                 postLoadListeners.AddRange(c.Resolve<IEnumerable<IPostLoadEventListener>>().ToList());
                 cfg.EventListeners.PostLoadEventListeners = postLoadListeners.ToArray();
@@ -38,16 +51,11 @@ namespace NHibernateDDD.Console
                 cfg.EventListeners.PostUpdateEventListeners = postUpdateListeners.ToArray();
                 return cfg.BuildSessionFactory();
             }).SingleInstance();
+
             builder.Register(c => c.Resolve<ISessionFactory>().OpenSession()).InstancePerDependency();
             builder.RegisterType<Controller>().AsSelf();
-            var container = builder.Build();
 
-            using (var scope = container.BeginLifetimeScope())
-            {
-                scope.Resolve<Controller>().Execute();
-            }
-
-            System.Console.ReadKey(true);
+            return builder.Build();
         }
     }
 }
