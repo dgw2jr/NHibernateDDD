@@ -21,8 +21,8 @@ namespace NHibernateDDD
 
                 Console.WriteLine(e.Name);
                 var role = _session.Query<CEO>().Single();
-                e.PromoteTo(role);
-                _session.Save(e);
+                //e.PromoteTo(role);
+                //_session.Save(e);
 
                 tx.Commit();
             }

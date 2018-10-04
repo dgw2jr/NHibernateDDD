@@ -35,8 +35,8 @@ namespace NHibernateDDD.Console
             builder.Register(c =>
             {
                 var cfg = Fluently.Configure()
-                    .Database(MsSqlConfiguration.MsSql2008.ConnectionString(
-                        @"Data Source=np:\\.\pipe\LOCALDB#85778BB9\tsql\query;Initial Catalog=Employees;Integrated Security=true;"))
+                    .Database(MsSqlConfiguration.MsSql2012.ConnectionString(
+                        @"Data Source=.\sqlexpress;Initial Catalog=Employees;Integrated Security=true;"))
                     .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
                     .BuildConfiguration();
 
