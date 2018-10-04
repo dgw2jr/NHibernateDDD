@@ -1,6 +1,6 @@
 ﻿using FluentNHibernate.Mapping;
 
-namespace NHibernateDDD
+namespace NHibernateDDD.Mappings
 {
     public class EmploymentRoleMap : ClassMap<EmploymentRole>
     {

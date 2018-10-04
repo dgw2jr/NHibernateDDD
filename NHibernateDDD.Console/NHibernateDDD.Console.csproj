@@ -45,6 +45,12 @@
     <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\NHibernateDDD\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\NHibernateDDD\packages\MediatR.5.1.0\lib\net45\MediatR.dll</HintPath>
+    </Reference>
+    <Reference Include="MediatR.Extensions.Autofac.DependencyInjection, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\NHibernateDDD\packages\MediatR.Extensions.Autofac.DependencyInjection.1.2.1\lib\netstandard2.0\MediatR.Extensions.Autofac.DependencyInjection.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=5.1.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\NHibernateDDD\packages\NHibernate.5.1.1\lib\net461\NHibernate.dll</HintPath>
     </Reference>

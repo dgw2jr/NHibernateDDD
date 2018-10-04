@@ -4,8 +4,10 @@ using System.Reflection;
 using Autofac;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using MediatR.Extensions.Autofac.DependencyInjection;
 using NHibernate;
 using NHibernate.Event;
+using NHibernateDDD.Mappings;
 
 namespace NHibernateDDD.Console
 {
@@ -54,6 +56,8 @@ namespace NHibernateDDD.Console
 
             builder.Register(c => c.Resolve<ISessionFactory>().OpenSession()).InstancePerDependency();
             builder.RegisterType<Controller>().AsSelf();
+
+            builder.AddMediatR(Assembly.GetExecutingAssembly());
 
             return builder.Build();
         }

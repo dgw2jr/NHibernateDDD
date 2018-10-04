@@ -1,4 +1,5 @@
 ﻿using System;
+using NHibernateDDD.Events;
 
 namespace NHibernateDDD
 {
@@ -30,7 +31,7 @@ namespace NHibernateDDD
         public virtual void PromoteTo(EmploymentRole role)
         {
             EmploymentRole = role;
-            //DomainEvents.Add(new EmployeeWasPromotedEvent { Employee = this });
+            DomainEvents.Add(new EmployeeWasPromotedEvent { Employee = this });
         }
     }
 }

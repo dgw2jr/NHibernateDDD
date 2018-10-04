@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CEO.cs" />
+    <Compile Include="Events\EmployeeWasPromotedEvent.cs" />
     <Compile Include="Mappings\CEOMap.cs" />
     <Compile Include="CFO.cs" />
     <Compile Include="Mappings\CFOMap.cs" />

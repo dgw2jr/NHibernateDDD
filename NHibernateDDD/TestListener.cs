@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using NHibernate.Event;
 
 namespace NHibernateDDD
 {
     public class TestListener : IPostLoadEventListener, IPostUpdateEventListener, IPostInsertEventListener
     {
-        private readonly TextWriter _writer;
+        private readonly IMediator _mediator;
 
-        public TestListener(TextWriter writer)
+        public TestListener(IMediator mediator)
         {
-            _writer = writer;
+            _mediator = mediator;
         }
 
         public void OnPostInsert(PostInsertEvent @event)
         {
-            _writer.Write("Inserted!");
+            DispatchEvents(@event.Entity as Entity);
         }
 
         public Task OnPostInsertAsync(PostInsertEvent @event, CancellationToken cancellationToken)
@@ -26,17 +27,32 @@ namespace NHibernateDDD
 
         public void OnPostLoad(PostLoadEvent @event)
         {
-            _writer.Write(@event.Entity.ToString());
+            Console.WriteLine(@event.Entity.ToString());
         }
 
         public void OnPostUpdate(PostUpdateEvent @event)
         {
-            _writer.Write("Updated!");
+            DispatchEvents(@event.Entity as Entity);
         }
 
         public Task OnPostUpdateAsync(PostUpdateEvent @event, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        private void DispatchEvents(Entity entity)
+        {
+            if (entity == null)
+            {
+                return;
+            }
+
+            foreach (var domainEvent in entity.DomainEvents)
+            {
+                _mediator.Publish(domainEvent);
+            }
+
+            entity.DomainEvents.Clear();
         }
     }
 }
