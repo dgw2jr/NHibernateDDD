@@ -6,7 +6,9 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using MediatR.Extensions.Autofac.DependencyInjection;
 using NHibernate;
+using NHibernate.Cfg;
 using NHibernate.Event;
+using NHibernate.Tool.hbm2ddl;
 using NHibernateDDD.Mappings;
 
 namespace NHibernateDDD.Console
@@ -48,6 +50,7 @@ namespace NHibernateDDD.Console
                 .Database(MsSqlConfiguration.MsSql2012.ConnectionString(
                     @"Data Source=.\sqlexpress;Initial Catalog=Employees;Integrated Security=true;"))
                 .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
+                .ExposeConfiguration(SchemaUpdateConfiguration)
                 .BuildConfiguration();
 
             var postLoadListeners = cfg.EventListeners.PostLoadEventListeners.ToList();
@@ -62,6 +65,12 @@ namespace NHibernateDDD.Console
             postUpdateListeners.AddRange(context.Resolve<IEnumerable<IPostUpdateEventListener>>().ToList());
             cfg.EventListeners.PostUpdateEventListeners = postUpdateListeners.ToArray();
             return cfg.BuildSessionFactory();
+        }
+
+        private static void SchemaUpdateConfiguration(Configuration configuration)
+        {
+            var update = new SchemaUpdate(configuration);
+            update.Execute(false, true);
         }
     }
 }
