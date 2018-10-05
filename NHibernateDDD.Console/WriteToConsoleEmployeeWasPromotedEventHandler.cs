@@ -5,7 +5,7 @@ using NHibernateDDD.Events;
 
 namespace NHibernateDDD.Console
 {
-    internal class WriteToConsoleEmployeeWasPromotedNotificationHandler : INotificationHandler<EmployeeWasPromotedEvent>
+    internal class WriteToConsoleEmployeeWasPromotedEventHandler : INotificationHandler<EmployeeWasPromotedEvent>
     {
         public Task Handle(EmployeeWasPromotedEvent notification, CancellationToken cancellationToken)
         {
