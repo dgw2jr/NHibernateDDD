@@ -32,27 +32,7 @@ namespace NHibernateDDD.Console
             builder.RegisterType<TextWriter>().AsSelf();
             builder.RegisterType<TestListener>().AsSelf().AsImplementedInterfaces();
 
-            builder.Register(c =>
-            {
-                var cfg = Fluently.Configure()
-                    .Database(MsSqlConfiguration.MsSql2012.ConnectionString(
-                        @"Data Source=.\sqlexpress;Initial Catalog=Employees;Integrated Security=true;"))
-                    .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
-                    .BuildConfiguration();
-
-                var postLoadListeners = cfg.EventListeners.PostLoadEventListeners.ToList();
-                postLoadListeners.AddRange(c.Resolve<IEnumerable<IPostLoadEventListener>>().ToList());
-                cfg.EventListeners.PostLoadEventListeners = postLoadListeners.ToArray();
-
-                var postInsertListeners = cfg.EventListeners.PostInsertEventListeners.ToList();
-                postInsertListeners.AddRange(c.Resolve<IEnumerable<IPostInsertEventListener>>().ToList());
-                cfg.EventListeners.PostInsertEventListeners = postInsertListeners.ToArray();
-
-                var postUpdateListeners = cfg.EventListeners.PostUpdateEventListeners.ToList();
-                postUpdateListeners.AddRange(c.Resolve<IEnumerable<IPostUpdateEventListener>>().ToList());
-                cfg.EventListeners.PostUpdateEventListeners = postUpdateListeners.ToArray();
-                return cfg.BuildSessionFactory();
-            }).SingleInstance();
+            builder.Register(CreateSessionFactory).SingleInstance();
 
             builder.Register(c => c.Resolve<ISessionFactory>().OpenSession()).InstancePerDependency();
             builder.RegisterType<Controller>().AsSelf();
@@ -60,6 +40,28 @@ namespace NHibernateDDD.Console
             builder.AddMediatR(Assembly.GetExecutingAssembly());
 
             return builder.Build();
+        }
+
+        private static ISessionFactory CreateSessionFactory(IComponentContext context)
+        {
+            var cfg = Fluently.Configure()
+                .Database(MsSqlConfiguration.MsSql2012.ConnectionString(
+                    @"Data Source=.\sqlexpress;Initial Catalog=Employees;Integrated Security=true;"))
+                .Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetAssembly(typeof(EmployeeMap))))
+                .BuildConfiguration();
+
+            var postLoadListeners = cfg.EventListeners.PostLoadEventListeners.ToList();
+            postLoadListeners.AddRange(context.Resolve<IEnumerable<IPostLoadEventListener>>().ToList());
+            cfg.EventListeners.PostLoadEventListeners = postLoadListeners.ToArray();
+
+            var postInsertListeners = cfg.EventListeners.PostInsertEventListeners.ToList();
+            postInsertListeners.AddRange(context.Resolve<IEnumerable<IPostInsertEventListener>>().ToList());
+            cfg.EventListeners.PostInsertEventListeners = postInsertListeners.ToArray();
+
+            var postUpdateListeners = cfg.EventListeners.PostUpdateEventListeners.ToList();
+            postUpdateListeners.AddRange(context.Resolve<IEnumerable<IPostUpdateEventListener>>().ToList());
+            cfg.EventListeners.PostUpdateEventListeners = postUpdateListeners.ToArray();
+            return cfg.BuildSessionFactory();
         }
     }
 }
