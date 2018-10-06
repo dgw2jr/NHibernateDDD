@@ -17,15 +17,18 @@ namespace NHibernateDDD
         {
             using (ITransaction tx = _session.BeginTransaction())
             {
-                var e = _session.Get<Employee>(new Guid("49587dbb-596e-4a6f-98c6-d33a997a04b2"));
+                var leadRole = _session.Query<Lead>().SingleOrDefault();
+                if (leadRole == null)
+                {
+                    leadRole = new Lead();
+                    _session.Save(leadRole);
+                }
+
+                var e = Employee.Create("Don", "Woodford", leadRole);
+
+                _session.Save(e);
 
                 Console.WriteLine(e.Name);
-                var role = _session.Query<Lead>().Single();
-                //e.PromoteTo(role);
-                //_session.Save(e);
-
-                e.ChangeName("", "Woodford");
-                _session.Save(e);
 
                 tx.Commit();
             }

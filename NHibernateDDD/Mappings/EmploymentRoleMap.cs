@@ -6,7 +6,6 @@ namespace NHibernateDDD.Mappings
     {
         public EmploymentRoleMap()
         {
-            Table("EmploymentRoles");
             Id(e => e.EmploymentRoleId);
             DiscriminateSubClassesOnColumn("Discriminator").Unique();
         }

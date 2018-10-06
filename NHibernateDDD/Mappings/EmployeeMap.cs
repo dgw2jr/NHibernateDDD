@@ -6,13 +6,12 @@ namespace NHibernateDDD.Mappings
     {
         public EmployeeMap()
         {
-            Table("Employees");
             Id(e => e.EmployeeId);
             Component(e => e.Name, mapper => {
-                mapper.Map(e => e.FirstName, "Name_FirstName");
-                mapper.Map(e => e.LastName, "Name_LastName");
+                mapper.Map(e => e.FirstName);
+                mapper.Map(e => e.LastName);
             });
-            References(e => e.EmploymentRole, "EmploymentRole_EmploymentRoleId");
+            References(e => e.EmploymentRole);
         }
     }
 }
