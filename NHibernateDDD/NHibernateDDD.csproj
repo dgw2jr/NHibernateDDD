@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="CEO.cs" />
     <Compile Include="Events\EmployeeWasPromotedEvent.cs" />
+    <Compile Include="Lead.cs" />
     <Compile Include="Mappings\CEOMap.cs" />
     <Compile Include="CFO.cs" />
     <Compile Include="Mappings\CFOMap.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Mappings\EmploymentRoleMap.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="Mappings\LeadMap.cs" />
     <Compile Include="Mappings\ManagerMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestListener.cs" />

@@ -33,5 +33,10 @@ namespace NHibernateDDD
             EmploymentRole = role;
             DomainEvents.Add(new EmployeeWasPromotedEvent { Employee = this });
         }
+
+        public virtual void ChangeName(string firstName, string lastName)
+        {
+            Name = EmployeeName.Create(firstName, lastName);
+        }
     }
 }

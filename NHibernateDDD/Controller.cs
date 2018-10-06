@@ -20,9 +20,12 @@ namespace NHibernateDDD
                 var e = _session.Get<Employee>(new Guid("49587dbb-596e-4a6f-98c6-d33a997a04b2"));
 
                 Console.WriteLine(e.Name);
-                var role = _session.Query<CEO>().Single();
+                var role = _session.Query<Lead>().Single();
                 //e.PromoteTo(role);
                 //_session.Save(e);
+
+                e.ChangeName("", "Woodford");
+                _session.Save(e);
 
                 tx.Commit();
             }

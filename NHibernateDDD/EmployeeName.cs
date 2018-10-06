@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace NHibernateDDD
@@ -14,6 +15,16 @@ namespace NHibernateDDD
 
         public static EmployeeName Create(string firstName, string lastName)
         {
+            if (string.IsNullOrWhiteSpace(firstName))
+            {
+                throw new ArgumentException("FirstName can't be null or empty", nameof(firstName));
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName))
+            {
+                throw new ArgumentException("LastName can't be null or empty", nameof(lastName));
+            }
+
             return new EmployeeName(firstName, lastName);
         }
 
