@@ -16,23 +16,32 @@ namespace NHibernateDDD
 
         public void Execute()
         {
+            var roles = _session.Query<EmploymentRole>()
+                .ToList()
+                .Select((v, i) => new {Value = v, Index = i + 1})
+                .ToList();
+
             Console.WriteLine("Create an employee...");
             Console.Write("Enter first name:");
             var firstName = Console.ReadLine();
             Console.Write("Enter last name:");
             var lastName = Console.ReadLine();
-            Console.Write("Enter role name:");
-            var selectedRole = Console.ReadLine();
+            Console.WriteLine("Select a role:");
+            foreach (var role in roles)
+            {
+                Console.WriteLine($"\t{role.Index}: {role.Value.GetType().Name}");
+            }
+
+            var selectedRoleIndex = Console.ReadLine();
+            var selectedRole = roles.Single(r => r.Index.ToString() == selectedRoleIndex).Value;
 
             using (ITransaction tx = _session.BeginTransaction())
             {
-                var role = _session.CreateCriteria(Type.GetType($"NHibernateDDD.{selectedRole}")).List<EmploymentRole>().Single();
-
                 var employee = _session.Query<Employee>().SingleOrDefault(e => e.Name.FirstName == firstName && e.Name.LastName == lastName);
 
                 if (employee == null)
                 {
-                    Employee.Create(firstName, lastName, role)
+                    Employee.Create(firstName, lastName, selectedRole)
                         .OnSuccess(emp =>
                         {
                             _session.Save(emp);
