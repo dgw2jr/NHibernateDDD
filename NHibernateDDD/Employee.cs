@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpFunctionalExtensions;
 using NHibernateDDD.Events;
 
 namespace NHibernateDDD
@@ -10,15 +11,26 @@ namespace NHibernateDDD
             EmployeeId = Guid.NewGuid();
         }
 
-        private Employee(string firstName, string lastName, EmploymentRole role) : this()
+        private Employee(EmployeeName name, EmploymentRole role) : this()
         {
-            Name = EmployeeName.Create(firstName, lastName);
+            Name = name;
             EmploymentRole = role;
         }
 
-        public static Employee Create(string firstName, string lastName, EmploymentRole role)
+        public static Result<Employee> Create(string firstName, string lastName, EmploymentRole role)
         {
-            return new Employee(firstName, lastName, role);
+            var name = EmployeeName.Create(firstName, lastName);
+            if (name.IsFailure)
+            {
+                return Result.Fail<Employee>(name.Error);
+            }
+
+            if (role == null)
+            {
+                return Result.Fail<Employee>("EmploymentRole cannot be null");
+            }
+
+            return Result.Ok(new Employee(name.Value, role));
         }
 
         public virtual Guid EmployeeId { get; protected set; }
@@ -34,9 +46,10 @@ namespace NHibernateDDD
             DomainEvents.Add(new EmployeeWasPromotedEvent { Employee = this });
         }
 
-        public virtual void ChangeName(string firstName, string lastName)
+        public virtual Result ChangeName(string firstName, string lastName)
         {
-            Name = EmployeeName.Create(firstName, lastName);
+            return EmployeeName.Create(firstName, lastName)
+                .OnSuccess(r => Name = r);
         }
     }
 }
