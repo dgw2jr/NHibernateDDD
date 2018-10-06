@@ -2,7 +2,6 @@
 using System.Linq;
 using CSharpFunctionalExtensions;
 using NHibernate;
-using NHibernate.Criterion;
 
 namespace NHibernateDDD
 {
@@ -34,18 +33,19 @@ namespace NHibernateDDD
                 if (employee == null)
                 {
                     Employee.Create(firstName, lastName, role)
-                        .OnSuccess(r =>
+                        .OnSuccess(emp =>
                         {
-                            employee = r;
-                            _session.Save(employee);
+                            _session.Save(emp);
 
-                            Console.WriteLine(employee.Name);
-                            Console.WriteLine(employee.EmployeeId);
+                            Console.WriteLine(emp.Name);
+                            Console.WriteLine(emp.EmployeeId);
                         })
                         .OnFailure(err => Console.WriteLine(err));
                 }
 
                 tx.Commit();
+
+                Execute();
             }
         }
     }
