@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 
 namespace NHibernateDDD
@@ -17,13 +16,11 @@ namespace NHibernateDDD
         {
             if (string.IsNullOrWhiteSpace(firstName))
             {
-                //throw new ArgumentException("FirstName can't be null or empty", nameof(firstName));
                 return Result.Fail<EmployeeName>("FirstName can't be null or empty");
             }
 
             if (string.IsNullOrWhiteSpace(lastName))
             {
-                //throw new ArgumentException("LastName can't be null or empty", nameof(lastName));
                 return Result.Fail<EmployeeName>("LastName can't be null or empty");
             }
 
